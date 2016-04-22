@@ -23,7 +23,7 @@
  */
 
 #include "ADC.h"
-#include "..//tm4c123gh6pm.h"
+#include "tm4c123gh6pm.h"
 // This initialization function sets up the ADC according to the
 // following parameters.  Any parameters not explicitly listed
 // below are not modified:

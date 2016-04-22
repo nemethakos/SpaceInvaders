@@ -7,7 +7,7 @@
 // Port B bits 3-0 have the 4-bit DAC
 
 #include "DAC.h"
-#include "..//tm4c123gh6pm.h"
+#include "tm4c123gh6pm.h"
 #define PORTB 0x02
 
 // Bits 5,4,3,2,1,0 - output
