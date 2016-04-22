@@ -14,7 +14,7 @@ void Switch_Init(void);
  * Returns !0, if PE0 is pushed (high), otherwise returns 0
  */
 unsigned char Switch_is_Fire_Pushed(void);
-	
+
 /**
  * Returns !0, if PE1 is pushed (high), otherwise returns 0
  */

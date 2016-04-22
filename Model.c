@@ -1,6 +1,6 @@
 /**
  * Model implementation of Space Invaders game
- * 
+ *
  * Copyright 2016 by Ákos Németh
  * You may use, edit, run or distribute this file
  * as long as the above copyright notice remains.

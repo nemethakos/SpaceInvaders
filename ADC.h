@@ -2,7 +2,7 @@
 // Runs on LM4F120/TM4C123
 // Provide functions that initialize ADC0 SS3 to be triggered by
 // software and trigger a conversion, wait for it to finish,
-// and return the result. 
+// and return the result.
 // Daniel Valvano
 // January 15, 2016
 
@@ -24,7 +24,7 @@
 
 #define ADC_MAX 4095
 
-// This initialization function sets up the ADC 
+// This initialization function sets up the ADC
 // Max sample rate: <=125,000 samples/second
 // SS3 triggering event: software trigger
 // SS3 1st sample source: channel 1

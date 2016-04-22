@@ -8,7 +8,7 @@
 // ******* Required Hardware I/O connections*******************
 // Slide pot pin 1 connected to ground
 // Slide pot pin 2 connected to PE2/AIN1
-// Slide pot pin 3 connected to +3.3V 
+// Slide pot pin 3 connected to +3.3V
 // fire button connected to PE0
 // special weapon fire button connected to PE1
 // 8*R resistor DAC bit 0 on PB0 (least significant bit)
@@ -54,40 +54,40 @@ void SysTick_Init(unsigned long period);
 void PLL_Init(void);
 
 
-int main(void){
-	TExaS_Init(  NoLCD_NoScope);
-	//PLL_Init();
-	ADC0_Init();
-	Switch_Init(); // PE0, PE1 - input
-  Nokia5110_Init();
-  Sound_Init();
-	SysTick_Init(80000000/30);
-	
-  gameLoop();
+int main(void) {
+    TExaS_Init(  NoLCD_NoScope);
+    //PLL_Init();
+    ADC0_Init();
+    Switch_Init(); // PE0, PE1 - input
+    Nokia5110_Init();
+    Sound_Init();
+    SysTick_Init(80000000/30);
+
+    gameLoop();
 }
 
 /**
 * Updates Player position and button states
 */
 void updateInputs() {
-	playerX = (ADC0_In()*PLAYER_MAX_X)/ADC_MAX;
-	button_fire = Switch_is_Fire_Pushed();
-	button_fire_special = Switch_is_Special_Fire_Pushed();
+    playerX = (ADC0_In()*PLAYER_MAX_X)/ADC_MAX;
+    button_fire = Switch_is_Fire_Pushed();
+    button_fire_special = Switch_is_Special_Fire_Pushed();
 }
 
 // Initialize SysTick interrupts to trigger at 30 Hz
-void SysTick_Init(unsigned long period){
-	NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
-  NVIC_ST_RELOAD_R = period-1;// reload value
-  NVIC_ST_CURRENT_R = 0;      // any write to current clears it
-  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF)|0x20000000; // priority 1      
-  NVIC_ST_CTRL_R = 0x0007;  // enable SysTick with core clock and interrupts
+void SysTick_Init(unsigned long period) {
+    NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
+    NVIC_ST_RELOAD_R = period-1;// reload value
+    NVIC_ST_CURRENT_R = 0;      // any write to current clears it
+    NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF)|0x20000000; // priority 1
+    NVIC_ST_CTRL_R = 0x0007;  // enable SysTick with core clock and interrupts
 }
 
 // executes 30Hz
-void SysTick_Handler(void){ 
-	updateInputs();
-	TimerCount++;
-	Semaphore = 1;
+void SysTick_Handler(void) {
+    updateInputs();
+    TimerCount++;
+    Semaphore = 1;
 }
 

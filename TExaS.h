@@ -1,6 +1,6 @@
 // TExaS.h
 // Runs on LM4F120/TM4C123
-// Periodic timer Timer5A which will interact with debugger and grade the lab 
+// Periodic timer Timer5A which will interact with debugger and grade the lab
 // It initializes on reset and runs whenever interrupts are enabled
 // Jonathan Valvano. Daniel Valvano
 // January 15, 2016
@@ -31,23 +31,23 @@
 //    commands to it.  Do not enable the oscilloscope.
 // 4) There is no LCD. Do not enable the oscilloscope. You may use this mode to
 //    have no display or to use the UART ASCII output like Labs 5 and 11
-enum DisplayType{
-  UART0_Emulate_Nokia5110_NoScope,
-  SSI0_Real_Nokia5110_Scope,
-  SSI0_Real_Nokia5110_NoScope,
-  NoLCD_NoScope
+enum DisplayType {
+    UART0_Emulate_Nokia5110_NoScope,
+    SSI0_Real_Nokia5110_Scope,
+    SSI0_Real_Nokia5110_NoScope,
+    NoLCD_NoScope
 };
 
 // ************TExaS_Init*****************
 // Initialize grader, voltmeter on timer 5A, scope on timer4A
 // sets PLL to 80 MHz
-// This needs to be called once 
+// This needs to be called once
 // Inputs: display system used to output the results
 // Outputs: none
 void TExaS_Init(enum DisplayType display);
 
 // ************TExaS_Stop*****************
-// Stop the transfer 
+// Stop the transfer
 // Inputs:  none
 // Outputs: none
 void TExaS_Stop(void);

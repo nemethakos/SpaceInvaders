@@ -50,21 +50,21 @@ void UART0_OutCharNonBlock(unsigned char data);
  * Viewer-Data in TExaS Grader 2.1 window
  */
 typedef struct TExaS_data  {
-  unsigned long Mode;         // 0 means idle, 1 means grading, 2 means done, 4 is error
-  unsigned long long Course;  // 8-byte ASCII code "edX" or "EE319K"
-  unsigned long Lab;
-  unsigned long Grade;        // grade from 0 to 100
-  unsigned long NumFromEdX;   // number from edX, set in DLL
-  unsigned long long CopyThisToEdX;    // 8 byte ASCII code
-  unsigned long ActionMsg;    // Action code
-  unsigned long IntroMsg;     // start test message code
-  unsigned long OKMsg;        // middle test message code
-  unsigned long ErrMsg;       // end test message code
+    unsigned long Mode;         // 0 means idle, 1 means grading, 2 means done, 4 is error
+    unsigned long long Course;  // 8-byte ASCII code "edX" or "EE319K"
+    unsigned long Lab;
+    unsigned long Grade;        // grade from 0 to 100
+    unsigned long NumFromEdX;   // number from edX, set in DLL
+    unsigned long long CopyThisToEdX;    // 8 byte ASCII code
+    unsigned long ActionMsg;    // Action code
+    unsigned long IntroMsg;     // start test message code
+    unsigned long OKMsg;        // middle test message code
+    unsigned long ErrMsg;       // end test message code
 } TEXAS_DATA;
 TEXAS_DATA TExaS; // in RAM, communication both directions on DLL
 typedef struct portdata  {
-  unsigned long InputPort;    // pointer to 40 byte character string
-  unsigned long OutputPort;   // pointer to 40 byte character string
+    unsigned long InputPort;    // pointer to 40 byte character string
+    unsigned long OutputPort;   // pointer to 40 byte character string
 } PORT_DATA;
 PORT_DATA TExaS_Ports;        // in RAM, set by user in DLL
 enum DisplayType Display;// value is not relevant
@@ -75,7 +75,7 @@ const unsigned char OutputPortMsg2[40] = "Real Nokia5110 on PA7-2";
 const unsigned char OutputPortMsg3[40] = "No Nokia5110, no scope";//NoLCD_NoScope
 
 typedef struct meterdata  {
-  unsigned long Voltage;       // in mV
+    unsigned long Voltage;       // in mV
 } METER_DATA;
 METER_DATA TExaS_Meter; // in RAM, seen on DLL
 
@@ -251,166 +251,174 @@ unsigned long ScopeCount; // one buffer is 512 points
 // This needs to be called once
 // Inputs: display system used to output the results
 // Outputs: none
-void TExaS_Init(enum DisplayType display){volatile unsigned long delay;
-  PLL_Init();     // ADC needs PLL on to run, 80 MHz
-  SYSCTL_RCGCTIMER_R |= 0x20;      // 0) activate timer5
-  SetCourse("UT.6.03x");
-  OUT(ActionMsg,IntroMsg);
-  OUT(IntroMsg,BlankMsg);
-  OUT(OKMsg,BlankMsg);
-  OUT(ErrMsg,BlankMsg);
-  LastMode = 0;
-  TExaS.Mode = 0; // bit 0 set by user in DLL window
-  TExaS_Test = 0; // goes from 0 to NUMTESTS-1
-  DelayBetweenTests = 0; // 0 means no sleeping
-  ADCnum = 0;     // index into oscilloscope buffer
-  bFlag = 0;      // true at first interrupt of a test
-  TExaS_Period = 800000;  // 10ms
-  TExaS.Lab = LABNUM;     // fixed
-  TExaS.Grade = 0;
-  TExaS_Meter.Voltage = 0;
-  Display = display;
-  ScopeMode = 0;
-  ScopeCount = 0;
-  TExaS_Ports.InputPort = (unsigned long) NoInputMsg;  // no grader
-  if(Display == UART0_Emulate_Nokia5110_NoScope){
-    TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg0;
-    UART0_Init();                    // UART0 is connected to TExaSdisplay
-  }else if(Display == SSI0_Real_Nokia5110_Scope){
-    TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg1;
-    ScopeMode = 1;
-    SYSCTL_RCGCTIMER_R |= 0x10;      // 0) activate timer4
-    UART0_Init();                    // UART0 is connected to TExaSdisplay
-    TIMER4_CTL_R = 0x00000000;       // 1) disable timer4A during setup
-    TIMER4_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
-    TIMER4_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
-    TIMER4_TAILR_R = 7999;           // 4) 100us reload value
-    TIMER4_TAPR_R = 0;               // 5) bus clock resolution
-    TIMER4_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
-    TIMER4_IMR_R = 0x00000001;       // 7) arm timeout interrupt
-    NVIC_PRI17_R = (NVIC_PRI17_R&0xFF00FFFF)|0x00E00000; // 8) priority 7
+void TExaS_Init(enum DisplayType display) {
+    volatile unsigned long delay;
+    PLL_Init();     // ADC needs PLL on to run, 80 MHz
+    SYSCTL_RCGCTIMER_R |= 0x20;      // 0) activate timer5
+    SetCourse("UT.6.03x");
+    OUT(ActionMsg,IntroMsg);
+    OUT(IntroMsg,BlankMsg);
+    OUT(OKMsg,BlankMsg);
+    OUT(ErrMsg,BlankMsg);
+    LastMode = 0;
+    TExaS.Mode = 0; // bit 0 set by user in DLL window
+    TExaS_Test = 0; // goes from 0 to NUMTESTS-1
+    DelayBetweenTests = 0; // 0 means no sleeping
+    ADCnum = 0;     // index into oscilloscope buffer
+    bFlag = 0;      // true at first interrupt of a test
+    TExaS_Period = 800000;  // 10ms
+    TExaS.Lab = LABNUM;     // fixed
+    TExaS.Grade = 0;
+    TExaS_Meter.Voltage = 0;
+    Display = display;
+    ScopeMode = 0;
+    ScopeCount = 0;
+    TExaS_Ports.InputPort = (unsigned long) NoInputMsg;  // no grader
+    if(Display == UART0_Emulate_Nokia5110_NoScope) {
+        TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg0;
+        UART0_Init();                    // UART0 is connected to TExaSdisplay
+    } else if(Display == SSI0_Real_Nokia5110_Scope) {
+        TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg1;
+        ScopeMode = 1;
+        SYSCTL_RCGCTIMER_R |= 0x10;      // 0) activate timer4
+        UART0_Init();                    // UART0 is connected to TExaSdisplay
+        TIMER4_CTL_R = 0x00000000;       // 1) disable timer4A during setup
+        TIMER4_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
+        TIMER4_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
+        TIMER4_TAILR_R = 7999;           // 4) 100us reload value
+        TIMER4_TAPR_R = 0;               // 5) bus clock resolution
+        TIMER4_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
+        TIMER4_IMR_R = 0x00000001;       // 7) arm timeout interrupt
+        NVIC_PRI17_R = (NVIC_PRI17_R&0xFF00FFFF)|0x00E00000; // 8) priority 7
 // interrupts enabled in the main program after all devices initialized
 // vector number 86, interrupt number 70
-    NVIC_EN2_R = 0x00000040;         // 9) enable interrupt 70 in NVIC
-    TIMER4_CTL_R = 0x00000001;       // 10) enable timer4A
-  }else if(Display == SSI0_Real_Nokia5110_NoScope){
-    TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg2;
-  }else{
-    TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg3;
-  }
-    
-  SetCode("        ");
+        NVIC_EN2_R = 0x00000040;         // 9) enable interrupt 70 in NVIC
+        TIMER4_CTL_R = 0x00000001;       // 10) enable timer4A
+    } else if(Display == SSI0_Real_Nokia5110_NoScope) {
+        TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg2;
+    } else {
+        TExaS_Ports.OutputPort = (unsigned long) OutputPortMsg3;
+    }
 
-  TIMER5_CTL_R = 0x00000000;       // 1) disable timer5A during setup
-  TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
-  TIMER5_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
-  TIMER5_TAILR_R = TExaS_Period-1; // 4) reload value
-  TIMER5_TAPR_R = 0;               // 5) bus clock resolution
-  TIMER5_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
-  TIMER5_IMR_R = 0x00000001;       // 7) arm timeout interrupt
-  NVIC_PRI23_R = (NVIC_PRI23_R&0xFFFFFF00)|0x00000040; // 8) priority 2
+    SetCode("        ");
+
+    TIMER5_CTL_R = 0x00000000;       // 1) disable timer5A during setup
+    TIMER5_CFG_R = 0x00000000;       // 2) configure for 32-bit mode
+    TIMER5_TAMR_R = 0x00000002;      // 3) configure for periodic mode, default down-count settings
+    TIMER5_TAILR_R = TExaS_Period-1; // 4) reload value
+    TIMER5_TAPR_R = 0;               // 5) bus clock resolution
+    TIMER5_ICR_R = 0x00000001;       // 6) clear timer5A timeout flag
+    TIMER5_IMR_R = 0x00000001;       // 7) arm timeout interrupt
+    NVIC_PRI23_R = (NVIC_PRI23_R&0xFFFFFF00)|0x00000040; // 8) priority 2
 // interrupts enabled in the main program after all devices initialized
 // vector number 108, interrupt number 92
-  NVIC_EN2_R = 0x10000000;         // 9) enable interrupt 92 in NVIC
-  TIMER5_CTL_R = 0x00000001;       // 10) enable timer5A
+    NVIC_EN2_R = 0x10000000;         // 9) enable interrupt 92 in NVIC
+    TIMER5_CTL_R = 0x00000001;       // 10) enable timer5A
 
-  ADC1_Init();     // called after PLL on
-  OUT(IntroMsg,InitializedMsg);
+    ADC1_Init();     // called after PLL on
+    OUT(IntroMsg,InitializedMsg);
 }
 
-void StopTimer4(void){
-  NVIC_DIS2_R = 0x00000040;        // 9) enable interrupt 70 in NVIC
-  TIMER4_CTL_R = 0x00000000;       // 10) enable timer4A
+void StopTimer4(void) {
+    NVIC_DIS2_R = 0x00000040;        // 9) enable interrupt 70 in NVIC
+    TIMER4_CTL_R = 0x00000000;       // 10) enable timer4A
 }
-void StartTimer4(void){
-  ScopeCount = SCOPESIZE;
-  NVIC_EN2_R = 0x00000040;         // 9) enable interrupt 70 in NVIC
-  TIMER4_CTL_R = 0x00000001;       // 10) enable timer4A
+void StartTimer4(void) {
+    ScopeCount = SCOPESIZE;
+    NVIC_EN2_R = 0x00000040;         // 9) enable interrupt 70 in NVIC
+    TIMER4_CTL_R = 0x00000001;       // 10) enable timer4A
 }
 #define UART0_DR_R              (*((volatile unsigned long *)0x4000C000))
 // this ISR implements the scope, 12bit ADC scaled to 8 bits and sent
-void Timer4A_Handler(void){
-  TIMER4_ICR_R = 0x00000001;        // acknowledge timer4A timeout
-  UART0_DR_R = (ADC1_SSFIFO3_R>>4); // send ADC to TExaSdisplay
+void Timer4A_Handler(void) {
+    TIMER4_ICR_R = 0x00000001;        // acknowledge timer4A timeout
+    UART0_DR_R = (ADC1_SSFIFO3_R>>4); // send ADC to TExaSdisplay
 }
 
 // grading occurs in the background
-void Timer5A_Handler(void){
-  TIMER5_TAILR_R = TExaS_Period-1;   // allow for variable rate
-  TIMER5_ICR_R = 0x00000001;         // acknowledge timer5A timeout
-  TExaS_Meter.Voltage = (3300*ADC1_In())>>12; // implements voltmeter
+void Timer5A_Handler(void) {
+    TIMER5_TAILR_R = TExaS_Period-1;   // allow for variable rate
+    TIMER5_ICR_R = 0x00000001;         // acknowledge timer5A timeout
+    TExaS_Meter.Voltage = (3300*ADC1_In())>>12; // implements voltmeter
 }
 
 // ************TExaS_Stop*****************
 // Stop the transfer
 // Inputs:  none
 // Outputs: none
-void TExaS_Stop(void){
-  NVIC_DIS2_R = 0x10000000;       // 9) disable interrupt 92 in NVIC
-  TIMER5_CTL_R = 0x00000000;      // 10) disable timer5A
+void TExaS_Stop(void) {
+    NVIC_DIS2_R = 0x10000000;       // 9) disable interrupt 92 in NVIC
+    TIMER5_CTL_R = 0x00000000;      // 10) disable timer5A
 }
 // start conversions, sample always
 // ADC1
 // PD3 Ain4
 // 16-point averaging 125kHz sampling
-void ADC1_Init(void){ volatile unsigned long delay;
-  SYSCTL_RCGC2_R |= 0x08;         // 1) activate clock for Port D
+void ADC1_Init(void) {
+    volatile unsigned long delay;
+    SYSCTL_RCGC2_R |= 0x08;         // 1) activate clock for Port D
 //  SYSCTL_RCGCGPIO_R |= 0x08;      // 1) activate clock for Port D
-  delay = SYSCTL_RCGC2_R;         //    allow time for clock to stabilize
-  delay = SYSCTL_RCGC2_R;
-  GPIO_PORTD_DIR_R &= ~0x08;      // 2) make PD3 input
-  GPIO_PORTD_AFSEL_R |= 0x08;     // 3) enable alternate function on PD3
-  GPIO_PORTD_DEN_R &= ~0x08;      // 4) disable digital I/O on PD3
-  GPIO_PORTD_AMSEL_R |= 0x08;     // 5) enable analog functionality on PD3
-  SYSCTL_RCGC0_R |= 0x00020000;   // 6) activate ADC1 (legacy code)
+    delay = SYSCTL_RCGC2_R;         //    allow time for clock to stabilize
+    delay = SYSCTL_RCGC2_R;
+    GPIO_PORTD_DIR_R &= ~0x08;      // 2) make PD3 input
+    GPIO_PORTD_AFSEL_R |= 0x08;     // 3) enable alternate function on PD3
+    GPIO_PORTD_DEN_R &= ~0x08;      // 4) disable digital I/O on PD3
+    GPIO_PORTD_AMSEL_R |= 0x08;     // 5) enable analog functionality on PD3
+    SYSCTL_RCGC0_R |= 0x00020000;   // 6) activate ADC1 (legacy code)
 //  SYSCTL_RCGCADC_R |= 0x02;
-  for(delay = 0; delay<20; delay++){};  // allow time for clock to stabilize
+    for(delay = 0; delay<20; delay++) {}; // allow time for clock to stabilize
 //  SYSCTL_RCGC0_R &= ~0x00000C00;  // 7) configure for 125K (legacy code)
-  ADC1_PC_R = 0x01;               // 7) 125K rate
-  ADC1_SSPRI_R = 0x0123;          // 8) Sequencer 3 is highest priority
-  ADC1_ACTSS_R = 0x0000;          // 9) disable sample sequencer 3
-  ADC1_EMUX_R |= 0xF000;          // 10) seq3 is always/continuous trigger
-  ADC1_SAC_R = 0x03;              //   8-point average 125kHz/8 = 15,625 Hz
-  ADC1_SSMUX3_R = 4;              // 11) set channel 4
-  ADC1_SSCTL3_R = 0x0006;         // 12) no TS0 D0, yes IE0 END0
-  ADC1_IM_R = 0x0000;             // 13) disable SS3 interrupts
-  ADC1_ACTSS_R = 0x0008;          // 14) enable sample sequencer 3
+    ADC1_PC_R = 0x01;               // 7) 125K rate
+    ADC1_SSPRI_R = 0x0123;          // 8) Sequencer 3 is highest priority
+    ADC1_ACTSS_R = 0x0000;          // 9) disable sample sequencer 3
+    ADC1_EMUX_R |= 0xF000;          // 10) seq3 is always/continuous trigger
+    ADC1_SAC_R = 0x03;              //   8-point average 125kHz/8 = 15,625 Hz
+    ADC1_SSMUX3_R = 4;              // 11) set channel 4
+    ADC1_SSCTL3_R = 0x0006;         // 12) no TS0 D0, yes IE0 END0
+    ADC1_IM_R = 0x0000;             // 13) disable SS3 interrupts
+    ADC1_ACTSS_R = 0x0008;          // 14) enable sample sequencer 3
 }
 
 //------------ADC1_In------------
 // Analog to digital conversion.
 // Input: none
 // Output: 12-bit result of ADC conversion
-unsigned long ADC1_In(void){
-  return ADC1_SSFIFO3_R;
+unsigned long ADC1_In(void) {
+    return ADC1_SSFIFO3_R;
 }
 
-void copy(char *destPt, char *sourcePt){ unsigned char data;
-  do{
-    data = *sourcePt; sourcePt++;
-    *destPt = data; destPt++;
-  }while(data);
+void copy(char *destPt, char *sourcePt) {
+    unsigned char data;
+    do {
+        data = *sourcePt;
+        sourcePt++;
+        *destPt = data;
+        destPt++;
+    } while(data);
 }
-void SetCode(char code[]){ int i;
-  char *pt;
-  pt = (char *) &TExaS.CopyThisToEdX;
-  for(i=0; i<8; i++){
-    pt[i] = code[i];
-  }
+void SetCode(char code[]) {
+    int i;
+    char *pt;
+    pt = (char *) &TExaS.CopyThisToEdX;
+    for(i=0; i<8; i++) {
+        pt[i] = code[i];
+    }
 }
-void SetCourse(char code[]){ int i;
-  char *pt;
-  pt = (char *) &TExaS.Course;
-  for(i=0; i<8; i++){
-    pt[i] = code[i];
-  }
+void SetCourse(char code[]) {
+    int i;
+    char *pt;
+    pt = (char *) &TExaS.Course;
+    for(i=0; i<8; i++) {
+        pt[i] = code[i];
+    }
 }
-void SetMode(char code[]){ int i;
-  char *pt;
-  pt = (char *) &TExaS.Mode;
-  for(i=0; i<8; i++){
-    pt[i] = code[i];
-  }
+void SetMode(char code[]) {
+    int i;
+    char *pt;
+    pt = (char *) &TExaS.Mode;
+    for(i=0; i<8; i++) {
+        pt[i] = code[i];
+    }
 }
 
 // The #define statement SYSDIV2 in PLL.h
@@ -429,7 +437,7 @@ void SetMode(char code[]){ int i;
 #define SYSCTL_RCC2_R           (*((volatile unsigned long *)0x400FE070))
 #define SYSCTL_RCC2_USERCC2     0x80000000  // Use RCC2
 #define SYSCTL_RCC2_DIV400      0x40000000  // Divide PLL as 400 MHz vs. 200
-                                            // MHz
+// MHz
 #define SYSCTL_RCC2_SYSDIV2_M   0x1F800000  // System Clock Divisor 2
 #define SYSCTL_RCC2_SYSDIV2LSB  0x00400000  // Additional LSB for SYSDIV2
 #define SYSCTL_RCC2_PWRDN2      0x00002000  // Power-Down PLL 2
@@ -442,27 +450,27 @@ void SetMode(char code[]){ int i;
 // bus frequency is 400MHz/(SYSDIV2+1) = 400MHz/(4+1) = 80 MHz
 
 // configure the system to get its clock from the PLL
-void PLL_Init(void){
-  // 0) configure the system to use RCC2 for advanced features
-  //    such as 400 MHz PLL and non-integer System Clock Divisor
-  SYSCTL_RCC2_R |= SYSCTL_RCC2_USERCC2;
-  // 1) bypass PLL while initializing
-  SYSCTL_RCC2_R |= SYSCTL_RCC2_BYPASS2;
-  // 2) select the crystal value and oscillator source
-  SYSCTL_RCC_R &= ~SYSCTL_RCC_XTAL_M;   // clear XTAL field
-  SYSCTL_RCC_R += SYSCTL_RCC_XTAL_16MHZ;// configure for 16 MHz crystal
-  SYSCTL_RCC2_R &= ~SYSCTL_RCC2_OSCSRC2_M;// clear oscillator source field
-  SYSCTL_RCC2_R += SYSCTL_RCC2_OSCSRC2_MO;// configure for main oscillator source
-  // 3) activate PLL by clearing PWRDN
-  SYSCTL_RCC2_R &= ~SYSCTL_RCC2_PWRDN2;
-  // 4) set the desired system divider and the system divider least significant bit
-  SYSCTL_RCC2_R |= SYSCTL_RCC2_DIV400;  // use 400 MHz PLL
-  SYSCTL_RCC2_R = (SYSCTL_RCC2_R&~0x1FC00000) // clear system clock divider field
-                  + (SYSDIV2<<22);      // configure for 80 MHz clock
-  // 5) wait for the PLL to lock by polling PLLLRIS
-  while((SYSCTL_RIS_R&SYSCTL_RIS_PLLLRIS)==0){};
-  // 6) enable use of PLL by clearing BYPASS
-  SYSCTL_RCC2_R &= ~SYSCTL_RCC2_BYPASS2;
+void PLL_Init(void) {
+    // 0) configure the system to use RCC2 for advanced features
+    //    such as 400 MHz PLL and non-integer System Clock Divisor
+    SYSCTL_RCC2_R |= SYSCTL_RCC2_USERCC2;
+    // 1) bypass PLL while initializing
+    SYSCTL_RCC2_R |= SYSCTL_RCC2_BYPASS2;
+    // 2) select the crystal value and oscillator source
+    SYSCTL_RCC_R &= ~SYSCTL_RCC_XTAL_M;   // clear XTAL field
+    SYSCTL_RCC_R += SYSCTL_RCC_XTAL_16MHZ;// configure for 16 MHz crystal
+    SYSCTL_RCC2_R &= ~SYSCTL_RCC2_OSCSRC2_M;// clear oscillator source field
+    SYSCTL_RCC2_R += SYSCTL_RCC2_OSCSRC2_MO;// configure for main oscillator source
+    // 3) activate PLL by clearing PWRDN
+    SYSCTL_RCC2_R &= ~SYSCTL_RCC2_PWRDN2;
+    // 4) set the desired system divider and the system divider least significant bit
+    SYSCTL_RCC2_R |= SYSCTL_RCC2_DIV400;  // use 400 MHz PLL
+    SYSCTL_RCC2_R = (SYSCTL_RCC2_R&~0x1FC00000) // clear system clock divider field
+                    + (SYSDIV2<<22);      // configure for 80 MHz clock
+    // 5) wait for the PLL to lock by polling PLLLRIS
+    while((SYSCTL_RIS_R&SYSCTL_RIS_PLLLRIS)==0) {};
+    // 6) enable use of PLL by clearing BYPASS
+    SYSCTL_RCC2_R &= ~SYSCTL_RCC2_BYPASS2;
 }
 
 #define GPIO_PORTA_AFSEL_R      (*((volatile unsigned long *)0x40004420))
@@ -495,61 +503,62 @@ void PLL_Init(void){
 // 8 bit word length, no parity bits, one stop bit, FIFOs enabled
 // Input: none
 // Output: none
-void UART0_Init(void){volatile unsigned long delay;
-  SYSCTL_RCGC1_R |= SYSCTL_RCGC1_UART0; // activate UART0
-  SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA; // activate port A
-                                        // wait for clock to stabilize
+void UART0_Init(void) {
+    volatile unsigned long delay;
+    SYSCTL_RCGC1_R |= SYSCTL_RCGC1_UART0; // activate UART0
+    SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA; // activate port A
+    // wait for clock to stabilize
 //  while((SYSCTL_PRUART_R&SYSCTL_PRUART_R0) == 0){};
-  delay =SYSCTL_RCGC2_R;
-  delay =SYSCTL_RCGC2_R;
-  UART0_CTL_R &= ~UART_CTL_UARTEN;      // disable UART
-  UART0_IBRD_R = 43;                    // IBRD = int(80,000,000 / (16 * 115200)) = int(43.402778)
-  UART0_FBRD_R = 26;                    // FBRD = round(0.402778 * 64) = 26
-                                        // 8 bit word length (no parity bits, one stop bit, FIFOs)
-  UART0_LCRH_R = (UART_LCRH_WLEN_8|UART_LCRH_FEN);
-  UART0_CC_R &= ~UART_CC_CS_M;          // clear baud clock control field
-  UART0_CC_R |= UART_CC_CS_SYSCLK;      // configure for system clock
-  UART0_CTL_R |= UART_CTL_UARTEN;       // enable UART
+    delay =SYSCTL_RCGC2_R;
+    delay =SYSCTL_RCGC2_R;
+    UART0_CTL_R &= ~UART_CTL_UARTEN;      // disable UART
+    UART0_IBRD_R = 43;                    // IBRD = int(80,000,000 / (16 * 115200)) = int(43.402778)
+    UART0_FBRD_R = 26;                    // FBRD = round(0.402778 * 64) = 26
+    // 8 bit word length (no parity bits, one stop bit, FIFOs)
+    UART0_LCRH_R = (UART_LCRH_WLEN_8|UART_LCRH_FEN);
+    UART0_CC_R &= ~UART_CC_CS_M;          // clear baud clock control field
+    UART0_CC_R |= UART_CC_CS_SYSCLK;      // configure for system clock
+    UART0_CTL_R |= UART_CTL_UARTEN;       // enable UART
 //  while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R0) == 0){};
-  GPIO_PORTA_AFSEL_R |= 0x03;           // enable alt funct on PA1-0
-  GPIO_PORTA_DEN_R |= 0x03;             // enable digital I/O on PA1-0
-                                        // configure PA1-0 as UART
-  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFFFFFF00)+0x00000011;
-  GPIO_PORTA_AMSEL_R &= ~0x03;          // disable analog functionality on PA
+    GPIO_PORTA_AFSEL_R |= 0x03;           // enable alt funct on PA1-0
+    GPIO_PORTA_DEN_R |= 0x03;             // enable digital I/O on PA1-0
+    // configure PA1-0 as UART
+    GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFFFFFF00)+0x00000011;
+    GPIO_PORTA_AMSEL_R &= ~0x03;          // disable analog functionality on PA
 }
 
 //------------UART0_InChar------------
 // Wait for new serial port input
 // Input: none
 // Output: ASCII code for key typed
-unsigned char UART0_InChar(void){
-  while((UART0_FR_R&UART_FR_RXFE) != 0);
-  return((unsigned char)(UART0_DR_R&0xFF));
+unsigned char UART0_InChar(void) {
+    while((UART0_FR_R&UART_FR_RXFE) != 0);
+    return((unsigned char)(UART0_DR_R&0xFF));
 }
 //------------UART0_InCharNonBlocking------------
 // look for new serial port input
 // Input: none
 // Output: ASCII code for key typed
 //         0 if no key ready
-unsigned char UART0_InCharNonBlocking(void){
-  if((UART0_FR_R&UART_FR_RXFE) == 0){
-    return((unsigned char)(UART0_DR_R&0xFF));
-  }
-  return 0;
+unsigned char UART0_InCharNonBlocking(void) {
+    if((UART0_FR_R&UART_FR_RXFE) == 0) {
+        return((unsigned char)(UART0_DR_R&0xFF));
+    }
+    return 0;
 }
 //------------UART0_OutChar------------
 // Output 8-bit to serial port
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
-void UART0_OutChar(unsigned char data){
-  while((UART0_FR_R&UART_FR_TXFF) != 0);
-  UART0_DR_R = data;
+void UART0_OutChar(unsigned char data) {
+    while((UART0_FR_R&UART_FR_TXFF) != 0);
+    UART0_DR_R = data;
 }
 //------------UART0_OutCharNonBlock------------
 // Output 8-bit to serial port, do not wait
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
-void UART0_OutCharNonBlock(unsigned char data){
-  UART0_DR_R = data;
+void UART0_OutCharNonBlock(unsigned char data) {
+    UART0_DR_R = data;
 }
 

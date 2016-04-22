@@ -50,7 +50,7 @@ extern const unsigned char Bunker1[];
 // small shield floating in space to cover the player's ship from enemy fire (heavy generic damage)
 // width=18 x height=5
 extern const unsigned char Bunker2[];
- 
+
 // large explosion that can be used upon the demise of the player's ship (first frame)
 // width=18 x height=8
 extern const unsigned char BigExplosion0[];
@@ -72,7 +72,7 @@ extern const unsigned char Missile0[];
 // includes one blacked out row on the top, bottom, and left of the image to prevent smearing when moved 1 pixel down, up, or right
 // width=4 x height=9
 extern const unsigned char Missile1[];
-	
+
 // a laser burst in flight
 // includes one blacked out row on the top and bottom of the image to prevent smearing when moved 1 pixel up or down
 // width=2 x height=9

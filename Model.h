@@ -32,12 +32,12 @@
 #define MISSILEH    ((unsigned char)Missile0[22])
 #define PLAYERW     ((unsigned char)PlayerShip0[18])
 #define PLAYERH     ((unsigned char)PlayerShip0[22])
-#define SMALLEXPLOSIONH ((unsigned char)SmallExplosion0[22])	
+#define SMALLEXPLOSIONH ((unsigned char)SmallExplosion0[22])
 #define LIFEW ((unsigned char)Life[18])
 #define LIFEH ((unsigned char)Life[22])
 #define LASEREXPLOSIONW	((unsigned char)LaserExplosion[18])
-#define LASEREXPLOSIONH ((unsigned char)LaserExplosion[22])	
-	
+#define LASEREXPLOSIONH ((unsigned char)LaserExplosion[22])
+
 #define FPS 30 // frames per seconds
 #define PLAYER_MAX_X (SCREENW-PLAYERW)
 
@@ -71,26 +71,26 @@
 typedef enum {WELCOME, SETUP, PLAY, GAME_OVER, GAMEPLAY_INIT} GameState;
 
 struct Bounds {
-  int x;
-	int y;
-	int x1;
-	int y1;
-	int width;
-	int height;
+    int x;
+    int y;
+    int x1;
+    int y1;
+    int width;
+    int height;
 };
 typedef struct Bounds BTyp;
 
 struct State {
-	unsigned int displayDelay; // display is delayed until TimerCount > displayDelay
-	int score; // points earned by destroying the enemy
-  unsigned long x;      // x coordinate
-  unsigned long y;      // y coordinate
-  const unsigned char *image[4]; // ptr->image
-  long life;            // 0=dead, 1>=alive
-	int phase; // phase will be decreased after life become 0. if phase will be 0, the enemy won't be displayed
-	unsigned char animationPhase; // initialized to 0
-	BTyp bounds;
-};          
+    unsigned int displayDelay; // display is delayed until TimerCount > displayDelay
+    int score; // points earned by destroying the enemy
+    unsigned long x;      // x coordinate
+    unsigned long y;      // y coordinate
+    const unsigned char *image[4]; // ptr->image
+    long life;            // 0=dead, 1>=alive
+    int phase; // phase will be decreased after life become 0. if phase will be 0, the enemy won't be displayed
+    unsigned char animationPhase; // initialized to 0
+    BTyp bounds;
+};
 typedef struct State STyp;
 
 // global variables
