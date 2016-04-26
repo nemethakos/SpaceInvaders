@@ -23,6 +23,10 @@ LED1 (red) flashes when an enemy missile is heading for the player. LED2 (green)
 
 To earn the most points, leave one enemy in each level, and shoot as much bonus enemy as possible. Also shooting the enemy missiles adds 10 points to the player's score.
 
+### Video
+
+https://youtu.be/sHnyJMYgT9Q
+
 ### Troubleshooting
 
 In case the game doesn't compile or has runtime errors, please write to akos.space.invaders@gmail.com
