@@ -1,6 +1,8 @@
 # Space Invaders
 
-Space Invaders game for Lab15/UTAustinX: UT.6.03x Embedded Systems -  Shape the World
+[![Space Invaders Handheld Game Console](https://img.youtube.com/vi/sHnyJMYgT9Q/0.jpg)](https://www.youtube.com/watch?v=sHnyJMYgT9Q "Space Invaders Handheld Game Console")
+
+Space Invaders game for Lab15/[UTAustinX:UT.6.03x Embedded Systems -  Shape the World](https://courses.edx.org/courses/course-v1:UTAustinX+UT.6.03x+1T2016/course/)
 
 ### How to compile
 
